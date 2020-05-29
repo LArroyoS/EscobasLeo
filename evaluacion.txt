@@ -1,0 +1,26 @@
+Programación Web.
+
+Evaluación unidades 3 y 4
+100% Valor Total de la unidades.
+
+Criterios, el proyecto debe hacer uso de: html5, 
+Bootstrap ( 3 o 4), JQuery ( para validación del lado 
+del cliente), php y mysql(para el manejo y para la creación 
+de la base de datos), Las imágenes de las páginas deben 
+verse completas dentro del navegador de Internet. Y el 
+código no debe tener errores y ser 100% el resultado de 
+la página y de su funcionalidad. 
+
+Elaborar un sitio Web, que para entrar en él se requiera 
+estar registrado o registrarse. 
+Una vez que haya accedido muestre un menú dropdown o 
+varios como ustedes decidan, para realizar operaciones 
+CRUD sobre una sola tabla, de una base de datos de datos, 
+que ustedes deben de crear y donde la operación Read 
+debe ser para todos los registros con todos sus campos 
+incluyendo el id.
+
+NOTA: Procura que la tabla posea campos que le permitan 
+relacionarse con otra tabla u otras tablas en un relación 
+uno a mucho o muchos a muchos, aunque las operaciones CRUD 
+solo son para la tabla que tu propones.
