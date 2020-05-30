@@ -10,37 +10,41 @@
         //isset determina si la variable esta definida y no es nula
         if($_SERVER["REQUEST_METHOD"] == "POST"){    
 
-            $sku = mysqli_real_escape_string($conn,$_POST['sku']);
-            $marca = mysqli_real_escape_string($conn,$_POST['marca']); 
-            $color = mysqli_real_escape_string($conn,$_POST['color']);
-            $material = mysqli_real_escape_string($conn,$_POST['material']);
-            $descripcion = mysqli_real_escape_string($conn,$_POST['descripcion']);
-            $tipo = mysqli_real_escape_string($conn,$_POST['tipo']);
-            $largo = mysqli_real_escape_string($conn,$_POST['largo']);
-            $ancho = mysqli_real_escape_string($conn,$_POST['ancho']);
-            $profundidad = mysqli_real_escape_string($conn,$_POST['profundidad']);
-            $peso = mysqli_real_escape_string($conn,$_POST['peso']);
-            $precio = mysqli_real_escape_string($conn,$_POST['precio']);
-            // crear sql
-            $sql = "INSERT INTO escoba
-                    (sku,marca,color,material,descripcion,tipo,largo,ancho,
-                    profundidad,peso,precio) values 
-                    ('$sku','$marca','$color','$material','$descripcion',
-                    '$tipo','$largo','$ancho','$profundidad','$peso',
-                    '$precio')";
+            if(isset($_POST['eliminar'])){
 
-            // Guardar en la base de datos y revisar
-            if(mysqli_query($conn, $sql)){
+                $sku = mysqli_real_escape_string($conn,$_POST['sku']);
+                $marca = mysqli_real_escape_string($conn,$_POST['marca']); 
+                $color = mysqli_real_escape_string($conn,$_POST['color']);
+                $material = mysqli_real_escape_string($conn,$_POST['material']);
+                $descripcion = mysqli_real_escape_string($conn,$_POST['descripcion']);
+                $tipo = mysqli_real_escape_string($conn,$_POST['tipo']);
+                $largo = mysqli_real_escape_string($conn,$_POST['largo']);
+                $ancho = mysqli_real_escape_string($conn,$_POST['ancho']);
+                $profundidad = mysqli_real_escape_string($conn,$_POST['profundidad']);
+                $peso = mysqli_real_escape_string($conn,$_POST['peso']);
+                $precio = mysqli_real_escape_string($conn,$_POST['precio']);
+                // crear sql
+                $sql = "INSERT INTO escoba
+                        (sku,marca,color,material,descripcion,tipo,largo,ancho,
+                        profundidad,peso,precio) values 
+                        ('$sku','$marca','$color','$material','$descripcion',
+                        '$tipo','$largo','$ancho','$profundidad','$peso',
+                        '$precio')";
 
-                //Exito
-                //echo  'form es valido';
-                header('Location: index.php');
+                // Guardar en la base de datos y revisar
+                if(mysqli_query($conn, $sql)){
 
-            }
-            else{
+                    //Exito
+                    //echo  'form es valido';
+                    header('Location: index.php');
 
-                //error
-                $error = 'El SKU ya existe';
+                }
+                else{
+
+                    //error
+                    $error = 'El SKU ya existe';
+
+                }
 
             }
 

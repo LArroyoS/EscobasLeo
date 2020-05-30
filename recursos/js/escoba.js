@@ -12,6 +12,19 @@ $(document).ready(function() {
     var peso = [$("#peso"),$("#errorPeso")];
     var precio = [$("#precio"),$("#errorPrecio")];
 
+    $("#botones").on('click','#modificar',function(){
+
+        var padre = $(this).closest('#botones');
+        $(this).remove();
+
+        var item = '<input type="submit" class="btn btn-success" style="min-width: 200px;" value="GUARDAR" id="enviar" name="enviar"/>';
+        $(padre).append(item);
+
+        $(".desactivado").prop('disabled',false);
+
+
+    });
+
     $("#formulario").submit(function(e){
 
         if( validar(sku) && validar(marca) && validar(tipo) && 

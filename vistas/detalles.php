@@ -10,20 +10,61 @@
         //isset determina si la variable esta definida y no es nula
         if($_SERVER["REQUEST_METHOD"] == "POST"){    
 
-            $sku_eliminar = mysqli_real_escape_string($conn,$_POST['sku']);
-            // crear sql
-            $sql = "DELETE FROM escoba WHERE sku = '$sku_eliminar' ";
+            if(isset($_POST['eliminar'])){
 
-            // Guardar en la base de datos y revisar
-            if(mysqli_query($conn, $sql)){
+                $sku_eliminar = mysqli_real_escape_string($conn,$_POST['sku']);
+                // crear sql
+                $sql = "DELETE FROM escoba WHERE sku = '$sku_eliminar' ";
 
-                header('Location: index.php');
+                // Guardar en la base de datos y revisar
+                if(mysqli_query($conn, $sql)){
+
+                    header('Location: index.php');
+
+                }
+                else{
+
+                    //error
+                    $error = 'Ocurrio un error inesperado, no se pudo eliminar la escoba';
+
+                }
 
             }
-            else{
+            else if(isset($_POST['enviar'])){
 
-                //error
-                $error = 'Ocurrio un error inesperado';
+                $sku = mysqli_real_escape_string($conn,$_POST['sku']);
+                $marca = mysqli_real_escape_string($conn,$_POST['marca']); 
+                $color = mysqli_real_escape_string($conn,$_POST['color']);
+                $material = mysqli_real_escape_string($conn,$_POST['material']);
+                $descripcion = mysqli_real_escape_string($conn,$_POST['descripcion']);
+                $tipo = mysqli_real_escape_string($conn,$_POST['tipo']);
+                $largo = mysqli_real_escape_string($conn,$_POST['largo']);
+                $ancho = mysqli_real_escape_string($conn,$_POST['ancho']);
+                $profundidad = mysqli_real_escape_string($conn,$_POST['profundidad']);
+                $peso = mysqli_real_escape_string($conn,$_POST['peso']);
+                $precio = mysqli_real_escape_string($conn,$_POST['precio']);
+                // crear sql
+                $sql = "UPDATE escoba SET
+                        marca = '$marca',color = '$color',
+                        material = '$material',descripcion = '$descripcion',
+                        tipo = '$tipo',largo = '$largo',ancho = '$ancho',
+                        profundidad = '$profundidad',peso = '$peso',
+                        precio = '$precio' WHERE sku = '$sku' ";
+
+                // Guardar en la base de datos y revisar
+                if(mysqli_query($conn, $sql)){
+
+                    //Exito
+                    //echo  'form es valido';
+                    header('Location: index.php');
+
+                }
+                else{
+
+                    //error
+                    $error = 'El SKU ya existe';
+
+                }
 
             }
 
@@ -81,13 +122,15 @@
                         
                     <label for="sku">SKU:</label>
                     <input type="number" class="form-control" id="sku" name="sku" value="<?php echo htmlspecialchars($escoba['sku']); ?>" readonly="true"/>
+                    <div class="text-danger" id="errorSku"></div>
 
                 </div>
                             
                 <div class="form-group col-md-6">
                         
                     <label for="marca">Marca:</label>
-                    <input type="number" class="form-control" id="marca" name="marca" value="<?php echo htmlspecialchars($escoba['marca']); ?>" disabled="true"/>  
+                    <input type="number" class="form-control desactivado" id="marca" name="marca" value="<?php echo htmlspecialchars($escoba['marca']); ?>" disabled="true"/>  
+                    <div class="text-danger" id="errorMarca"></div>  
 
                 </div>
                 
@@ -98,14 +141,16 @@
                 <div class="form-group col-md-6">
 
                     <label for="tipo">Tipo:</label></label>
-                    <input type="number" class="form-control" id="tipo" name="tipo" value="<?php echo htmlspecialchars($escoba['tipo']); ?>" disabled="true"/>
+                    <input type="number" class="form-control desactivado" id="tipo" name="tipo" value="<?php echo htmlspecialchars($escoba['tipo']); ?>" disabled="true"/>
+                    <div class="text-danger" id="errorTipo"> </div>
 
                 </div>
 
                 <div class="form-group col-md-6">
 
                     <label for="material">Material ( separalos por un / ):</label>
-                    <input type="text" class="form-control" id="material" name="material" value="<?php echo htmlspecialchars($escoba['material']); ?>" disabled="true"/>
+                    <input type="text" class="form-control desactivado" id="material" name="material" value="<?php echo htmlspecialchars($escoba['material']); ?>" disabled="true"/>
+                    <div class="text-danger" id="errorMaterial"> </div>
 
                 </div>
 
@@ -116,14 +161,16 @@
                 <div class="form-group col-md-6">
                     
                     <label for="color">Color:</label>
-                    <input type="text" class="form-control" id="color" name="color" value="<?php echo htmlspecialchars($escoba['color']); ?>" disabled="true"/>
+                    <input type="text" class="form-control desactivado" id="color" name="color" value="<?php echo htmlspecialchars($escoba['color']); ?>" disabled="true"/>
+                    <div class="text-danger" id="errorColor"> </div>
 
                 </div>
 
                 <div class="form-group col-md-6">
                 
                     <label for="largo">Largo:</label>
-                    <input type="number" step="0.01" class="form-control" id="largo" name="largo" value="<?php echo htmlspecialchars($escoba['largo']); ?>" disabled="true"/>
+                    <input type="number" step="0.01" class="form-control desactivado" id="largo" name="largo" value="<?php echo htmlspecialchars($escoba['largo']); ?>" disabled="true"/>
+                    <div class="text-danger" id="errorLargo"> </div>
 
                 </div>
 
@@ -134,28 +181,32 @@
                 <div class="form-group col-md-3">
 
                     <label for="ancho">Ancho:</label>
-                    <input type="number" step="0.01" class="form-control" id="ancho" name="ancho" value="<?php echo htmlspecialchars($escoba['ancho']); ?>" disabled="true"/>
+                    <input type="number" step="0.01" class="form-control desactivado" id="ancho" name="ancho" value="<?php echo htmlspecialchars($escoba['ancho']); ?>" disabled="true"/>
+                    <div class="text-danger" id="errorAncho"> </div>
 
                 </div>
 
                 <div class="form-group col-md-3">
                             
                     <label for="profundidad">Profundidad:</label>
-                    <input type="number" step="0.01" class="form-control" id="profundidad" name="profundidad" value="<?php echo htmlspecialchars($escoba['profundidad']); ?>" disabled="true"/>
+                    <input type="number" step="0.01" class="form-control desactivado" id="profundidad" name="profundidad" value="<?php echo htmlspecialchars($escoba['profundidad']); ?>" disabled="true"/>
+                    <div class="text-danger" id="errorProfundidad"> </div>
 
                 </div>
 
                 <div class="form-group col-md-3">
                             
                     <label for="peso">Peso:</label>
-                    <input type="number" step="0.01" class="form-control" id="peso" name="peso" value="<?php echo htmlspecialchars($escoba['peso']); ?>" disabled="true"/>
+                    <input type="number" step="0.01" class="form-control desactivado" id="peso" name="peso" value="<?php echo htmlspecialchars($escoba['peso']); ?>" disabled="true"/>
+                    <div class="text-danger" id="errorPeso"> </div>
 
                 </div>
 
                 <div class="form-group col-md-3">
                             
                     <label for="precio">Precio:</label>
-                    <input type="number" step="0.01" class="form-control" id="precio" name="precio" value="<?php echo htmlspecialchars($escoba['precio']); ?>" disabled="true"/>
+                    <input type="number" step="0.01" class="form-control desactivado" id="precio" name="precio" value="<?php echo htmlspecialchars($escoba['precio']); ?>" disabled="true"/>
+                    <div class="text-danger" id="errorPrecio"> </div>
 
                 </div>
 
@@ -164,14 +215,15 @@
             <div class="form-group">
                             
                 <label for="descripcion">Descripcion:</label>
-                <textarea type="text" class="form-control" id="descripcion" name="descripcion" cols="40" rows="5" disabled="true"><?php echo htmlspecialchars($escoba['descripcion']); ?></textarea>
+                <textarea type="text" class="form-control desactivado" id="descripcion" name="descripcion" cols="40" rows="5" disabled="true"><?php echo htmlspecialchars($escoba['descripcion']); ?></textarea>
+                <div class="text-danger" id="errorDescripcion"> </div>
 
             </div>
 
             <?php 
             
                 $Botones = $Botones.'<input type="submit" name="eliminar" value="ELIMINAR" class="btn btn btn-danger" style="min-width: 200px;">'
-                            .'<input type="submit" name="modificar" value="MODIFICAR" class="btn btn-success" style="min-width: 200px;">';
+                            .'<a type="submit" id="modificar" name="modificar" class="btn btn-success text-light" style="min-width: 200px;">MODIFICAR</a>';
 
             ?>
 
@@ -181,7 +233,7 @@
 
         <?php endif; ?>
 
-        <div class="card-footer bg-white p-3 text-right text-center">
+        <div id="botones" class="card-footer bg-white p-3 text-right text-center">
 
             <?php echo $Botones; ?>
 
