@@ -1,0 +1,49 @@
+body{
+
+    background: #e3e6eb;
+
+}
+
+a{
+
+    text-decoration: none;
+
+}
+
+.escoba-text-color{
+
+    color: #dfa754 !important;
+
+}
+
+.escoba-bg-color{
+
+    background-color: #dfa754;
+
+}
+
+.escoba-bg-color *, .escoba-bg-color{
+        
+    color: white !important;
+
+}
+
+ul{
+
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+
+}
+
+.escoba{
+
+    width: 100px;
+    margin: 40px auto -30px;
+    display: block;
+    position: relative;
+    top: -70px;
+    padding: 0;
+
+}
+
