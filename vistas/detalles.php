@@ -2,46 +2,55 @@
 
     include('./configuracion/conexion.php');
 
-    $sku = $marca = $color = $material = $descripcion = $tipo = '';
-    $largo = $ancho = $profundidad = $peso = $precio = $error = '';
+    $escoba = null;
+    $error = "";
 
     if($conn){
 
         //isset determina si la variable esta definida y no es nula
         if($_SERVER["REQUEST_METHOD"] == "POST"){    
 
-            $id_eliminar = mysqli_real_escape_string($conn,$_POST['eliminar']);
+            $sku_eliminar = mysqli_real_escape_string($conn,$_POST['sku']);
             // crear sql
-            $sql = "INSERT INTO escoba
-                    (sku,marca,color,material,descripcion,tipo,largo,ancho,
-                    profundidad,peso,precio) values 
-                    ('$sku','$marca','$color','$material','$descripcion',
-                    '$tipo','$largo','$ancho','$profundidad','$peso',
-                    '$precio')";
+            $sql = "DELETE FROM escoba WHERE sku = '$sku_eliminar' ";
 
             // Guardar en la base de datos y revisar
             if(mysqli_query($conn, $sql)){
 
-                //Exito
-                //echo  'form es valido';
                 header('Location: index.php');
 
             }
             else{
 
                 //error
-                $error = 'El SKU ya existe';
+                $error = 'Ocurrio un error inesperado';
 
             }
 
         }
-        else{
 
+        if(isset($_GET['sku'])){
 
+            $sku = mysqli_real_escape_string($conn,$_GET['sku']);
 
-        }     
+            $sql = "SELECT * FROM escoba WHERE sku = $sku ";
+
+            $resultado = mysqli_query($conn,$sql);
+
+            $escoba = mysqli_fetch_assoc($resultado);
+
+            mysqli_free_result($resultado);
+
+        }    
 
     }
+    else{
+
+        $error = 'Error: '. mysqli_connect_error();
+
+    }
+
+    $Botones = '<a href="index.php" class="btn btn-light" style="min-width: 200px;">REGRESAR</a>';
 
     //Cierra la conexión
     mysqli_close($conn);
@@ -60,117 +69,121 @@
     
     <h1 class="text-center text-secondary pb-5">Detalle de Escoba</h1>
     
-    <form id="formulario" class="card shadow p-4" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
+    <form class="card shadow p-4" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
 
-        <div class="text-danger"> <?php echo htmlspecialchars($error); ?></div>
+        <?php if($escoba): ?>
 
-        <div class="form-row">
-                
-            <div class="form-group col-md-6">
+            <div class="text-danger"> <?php echo htmlspecialchars($error); ?></div>
+
+            <div class="form-row">
                     
-                <label for="sku">SKU:</label>
-                <input type="number" class="form-control" id="sku" name="sku" value="<?php echo htmlspecialchars($sku); ?>" />
-                <div class="text-danger" id="errorSku"></div>
-
-            </div>
+                <div class="form-group col-md-6">
                         
-            <div class="form-group col-md-6">
-                    
-                <label for="marca">Marca:</label>
-                <input type="number" class="form-control" id="marca" name="marca" value="<?php echo htmlspecialchars($marca); ?>" />
-                <div class="text-danger" id="errorMarca"></div>    
+                    <label for="sku">SKU:</label>
+                    <input type="number" class="form-control" id="sku" name="sku" value="<?php echo htmlspecialchars($escoba['sku']); ?>" readonly="true"/>
 
-            </div>
-            
-        </div>
-
-        <div class="form-row">
+                </div>
+                            
+                <div class="form-group col-md-6">
                         
-            <div class="form-group col-md-6">
+                    <label for="marca">Marca:</label>
+                    <input type="number" class="form-control" id="marca" name="marca" value="<?php echo htmlspecialchars($escoba['marca']); ?>" disabled="true"/>  
 
-                <label for="tipo">Tipo:</label></label>
-                <input type="number" class="form-control" id="tipo" name="tipo" value="<?php echo htmlspecialchars($tipo); ?>" />
-                <div class="text-danger" id="errorTipo"> </div>
-
-            </div>
-
-            <div class="form-group col-md-6">
-
-                <label for="material">Material ( separalos por un / ):</label>
-                <input type="text" class="form-control" id="material" name="material" value="<?php echo htmlspecialchars($material); ?>" />
-                <div class="text-danger" id="errorMaterial"> </div>
-
-            </div>
-
-        </div>
-
-        <div class="form-row">
-                        
-            <div class="form-group col-md-6">
+                </div>
                 
-                <label for="color">Color:</label>
-                <input type="text" class="form-control" id="color" name="color" value="<?php echo htmlspecialchars($color); ?>" />
-                <div class="text-danger" id="errorColor"> </div>
+            </div>
+
+            <div class="form-row">
+                            
+                <div class="form-group col-md-6">
+
+                    <label for="tipo">Tipo:</label></label>
+                    <input type="number" class="form-control" id="tipo" name="tipo" value="<?php echo htmlspecialchars($escoba['tipo']); ?>" disabled="true"/>
+
+                </div>
+
+                <div class="form-group col-md-6">
+
+                    <label for="material">Material ( separalos por un / ):</label>
+                    <input type="text" class="form-control" id="material" name="material" value="<?php echo htmlspecialchars($escoba['material']); ?>" disabled="true"/>
+
+                </div>
 
             </div>
 
-            <div class="form-group col-md-6">
+            <div class="form-row">
+                            
+                <div class="form-group col-md-6">
+                    
+                    <label for="color">Color:</label>
+                    <input type="text" class="form-control" id="color" name="color" value="<?php echo htmlspecialchars($escoba['color']); ?>" disabled="true"/>
+
+                </div>
+
+                <div class="form-group col-md-6">
+                
+                    <label for="largo">Largo:</label>
+                    <input type="number" step="0.01" class="form-control" id="largo" name="largo" value="<?php echo htmlspecialchars($escoba['largo']); ?>" disabled="true"/>
+
+                </div>
+
+            </div>
+
+            <div class="form-row">
+                            
+                <div class="form-group col-md-3">
+
+                    <label for="ancho">Ancho:</label>
+                    <input type="number" step="0.01" class="form-control" id="ancho" name="ancho" value="<?php echo htmlspecialchars($escoba['ancho']); ?>" disabled="true"/>
+
+                </div>
+
+                <div class="form-group col-md-3">
+                            
+                    <label for="profundidad">Profundidad:</label>
+                    <input type="number" step="0.01" class="form-control" id="profundidad" name="profundidad" value="<?php echo htmlspecialchars($escoba['profundidad']); ?>" disabled="true"/>
+
+                </div>
+
+                <div class="form-group col-md-3">
+                            
+                    <label for="peso">Peso:</label>
+                    <input type="number" step="0.01" class="form-control" id="peso" name="peso" value="<?php echo htmlspecialchars($escoba['peso']); ?>" disabled="true"/>
+
+                </div>
+
+                <div class="form-group col-md-3">
+                            
+                    <label for="precio">Precio:</label>
+                    <input type="number" step="0.01" class="form-control" id="precio" name="precio" value="<?php echo htmlspecialchars($escoba['precio']); ?>" disabled="true"/>
+
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                            
+                <label for="descripcion">Descripcion:</label>
+                <textarea type="text" class="form-control" id="descripcion" name="descripcion" cols="40" rows="5" disabled="true"><?php echo htmlspecialchars($escoba['descripcion']); ?></textarea>
+
+            </div>
+
+            <?php 
             
-                <label for="largo">Largo:</label>
-                <input type="number" step="0.01" class="form-control" id="largo" name="largo" value="<?php echo htmlspecialchars($largo); ?>" />
-                <div class="text-danger" id="errorLargo"> </div>
+                $Botones = $Botones.'<input type="submit" name="eliminar" value="ELIMINAR" class="btn btn btn-danger" style="min-width: 200px;">'
+                            .'<input type="submit" name="modificar" value="MODIFICAR" class="btn btn-success" style="min-width: 200px;">';
 
-            </div>
+            ?>
 
-        </div>
+        <?php else: ?>
 
-        <div class="form-row">
-                        
-            <div class="form-group col-md-3">
+            <h1>¡La Escoba que usted busca no existe!</h1>
 
-                <label for="ancho">Ancho:</label>
-                <input type="number" step="0.01" class="form-control" id="ancho" name="ancho" value="<?php echo htmlspecialchars($ancho); ?>" />
-                <div class="text-danger" id="errorAncho"> </div>
-
-            </div>
-
-            <div class="form-group col-md-3">
-                        
-                <label for="profundidad">Profundidad:</label>
-                <input type="number" step="0.01" class="form-control" id="profundidad" name="profundidad" value="<?php echo htmlspecialchars($profundidad); ?>" />
-                <div class="text-danger" id="errorProfundidad"> </div>
-
-            </div>
-
-            <div class="form-group col-md-3">
-                        
-                <label for="peso">Peso:</label>
-                <input type="number" step="0.01" class="form-control" id="peso" name="peso" value="<?php echo htmlspecialchars($peso); ?>" />
-                <div class="text-danger" id="errorPeso"> </div>
-
-            </div>
-
-            <div class="form-group col-md-3">
-                        
-                <label for="precio">Precio:</label>
-                <input type="number" step="0.01" class="form-control" id="precio" name="precio" value="<?php echo htmlspecialchars($precio); ?>" />
-                <div class="text-danger" id="errorPrecio"> </div>
-
-            </div>
-
-        </div>
-
-        <div class="form-group">
-                        
-            <label for="descripcion">Descripcion:</label>
-            <textarea type="text" class="form-control" id="descripcion" name="descripcion" cols="40" rows="5"><?php echo htmlspecialchars($descripcion); ?></textarea>
-            <div class="text-danger" id="errorDescripcion"> </div>
-
-        </div>
+        <?php endif; ?>
 
         <div class="card-footer bg-white p-3 text-right text-center">
 
-            <input type="submit" class="btn btn-success" style="width: 200px;" value="GUARDAR" id="enviar" name="enviar"/>
+            <?php echo $Botones; ?>
 
         </div>
 

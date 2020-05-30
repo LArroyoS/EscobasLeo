@@ -47,6 +47,11 @@
         }       
 
     }
+    else{
+
+        $error = 'Error: '. mysqli_connect_error();
+
+    }
 
     //Cierra la conexión
     mysqli_close($conn);
@@ -175,7 +180,8 @@
 
         <div class="card-footer bg-white p-3 text-right text-center">
 
-            <input type="submit" class="btn btn-success" style="width: 200px;" value="GUARDAR" id="enviar" name="enviar"/>
+            <a href="index.php" class="btn btn-light" style="min-width: 200px;">REGRESAR</a>
+            <input type="submit" class="btn btn-success" style="min-width: 200px;" value="GUARDAR" id="enviar" name="enviar"/>
 
         </div>
 

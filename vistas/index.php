@@ -76,7 +76,7 @@
 
                             <div class="card-footer bg-white text-right">
                             
-                                <a class="brand-text escoba-text-color" href="detalles.php?id=<?php echo $escoba['sku']; ?>">MAS INFORMACIÓN</a>
+                                <a class="brand-text escoba-text-color" href="detalles.php?sku=<?php echo $escoba['sku']; ?>">MAS INFORMACIÓN</a>
 
                             </div>
 
