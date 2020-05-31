@@ -6,7 +6,11 @@
 
     if($conn){
 
-        $sql = "SELECT marca,tipo,material,color,precio,sku,imagen FROM escoba ORDER BY created_at";
+        $sql = "SELECT marcas.marca,tipo.tipo,material,
+        color,precio,sku, imagen FROM escoba 
+        INNER JOIN marcas on marcas.id = escoba.marca 
+        INNER JOIN tipo on tipo.id = escoba.tipo 
+        ORDER BY created_at";
 
         $resultado = mysqli_query($conn,$sql);
 
@@ -71,15 +75,24 @@
 
                                 <h4> <?php echo htmlspecialchars($escoba['marca']); ?> </h4>
 
+                                <h4> <?php echo htmlspecialchars($escoba['tipo']); ?> </h4>
                                 <h4>
-                                
+
                                     <?php 
-                                    
-                                        echo htmlspecialchars( $escoba['tipo'].' '.$escoba['material'].' '.$escoba['color'] );
+                                        
+                                        $materiales = '';
+                                        foreach(explode(' ',$escoba['material']) as $mat){
+                                                                        
+                                            $materiales = $materiales.$mat."/";
+
+                                        }
+
+                                        echo (($materiales!='')? htmlspecialchars(substr($materiales,0,-1)):$materiales);
 
                                     ?>
 
                                 </h4>
+                                <h4> <?php echo htmlspecialchars($escoba['color']); ?> </h4>
 
                                 <h6> <?php echo htmlspecialchars('SKU: '.$escoba['sku']); ?> </h6>
 

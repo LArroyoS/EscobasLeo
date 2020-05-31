@@ -67,7 +67,7 @@
 
                     //Exito
                     //echo  'form es valido';
-                    //header('Location: index.php');
+                    header('Location: index.php');
 
                 }
                 else{
