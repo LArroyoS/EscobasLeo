@@ -25,6 +25,168 @@ $(document).ready(function() {
 
     });
 
+    $("#buscarModificar").on('click',function(){
+
+        if( validar(sku)){
+
+            var cadena = "sku="+sku[0].val();
+
+            $.ajax
+            ({
+                
+                url: "./consulta.php", //¿Ese archivo se llama así realmente?
+                method: "POST",
+                data: cadena,
+                success: function(resultado){
+
+                    if(resultado == null || resultado == ''){
+
+                        sku[1].text("No se encontro el producto");
+                        limpiar();
+
+                    }
+                    else{
+
+                        var json = JSON.parse(resultado);
+                        if(isNaN(json)){
+
+                            asignarValor(marca,json);
+                            asignarValor(color,json);
+                            asignarValor(material,json);
+                            asignarValor(descripcion,json);
+                            asignarValor(tipo,json);
+                            asignarValor(largo,json);
+                            asignarValor(ancho,json);
+                            asignarValor(profundidad,json);
+                            asignarValor(peso,json);
+                            asignarValor(precio,json);
+                            
+                            sku[0].prop('readonly',true);
+                            $(".btn-desactivado").prop('disabled',false);
+                            $(".desactivado").prop('disabled',false); 
+
+                        }
+                        else{
+
+                            sku[1].text("No se encontro el producto");
+                            limpiar();
+
+                        }
+
+
+                    }
+
+                }
+            
+            }); 
+
+        }else{
+
+            console.log('error de validacion');
+            limpiar();
+
+        }
+
+    });
+
+    $("#buscarEliminar").on('click',function(){
+
+        if( validar(sku)){
+
+            var cadena = "sku="+sku[0].val();
+            
+            $.ajax
+            ({
+                
+                url: "./consulta.php", //¿Ese archivo se llama así realmente?
+                method: "POST",
+                data: cadena,
+                success: function(resultado){
+
+                    if(resultado == null || resultado == ''){
+
+                        sku[1].text("No se encontro el producto");
+                        limpiar();
+
+                    }
+                    else{
+
+                        var json = JSON.parse(resultado);
+                        if(isNaN(json)){
+
+                            asignarValor(marca,json);
+                            asignarValor(color,json);
+                            asignarValor(material,json);
+                            asignarValor(descripcion,json);
+                            asignarValor(tipo,json);
+                            asignarValor(largo,json);
+                            asignarValor(ancho,json);
+                            asignarValor(profundidad,json);
+                            asignarValor(peso,json);
+                            asignarValor(precio,json);
+                            
+                            sku[0].prop('readonly',true);
+                            $(".btn-desactivado").prop('disabled',false);
+
+                        }
+                        else{
+
+                            sku[1].text("No se encontro el producto");
+                            limpiar();
+
+                        }
+
+
+                    }
+
+                }
+            
+            }); 
+
+        }else{
+
+            console.log('error de validacion');
+            limpiar();
+
+        }
+
+    });
+
+    $("#limpiar").on('click',function(){
+
+        limpiar();
+
+    });
+
+    function asignarValor(input,resultado){
+
+        let tipo = input[0].attr('id');
+
+        input[0].val(resultado[tipo]);
+
+    }
+
+    function limpiar(){
+
+        marca[0].val('');
+        color[0].val('')
+        material[0].val('')
+        descripcion[0].val('')
+        tipo[0].val('')
+        largo[0].val('')
+        ancho[0].val('')
+        profundidad[0].val('')
+        peso[0].val('')
+        precio[0].val('')
+        sku[0].val('');
+
+        sku[0].prop('readonly',false);
+        $(".desactivado").prop('disabled',true);
+        $(".btn-desactivado").prop('disabled',true);
+
+
+    }
+
     $("#formulario").submit(function(e){
 
         if( validar(sku) && validar(marca) && validar(tipo) && 
@@ -39,7 +201,7 @@ $(document).ready(function() {
         }
         else{
 
-            console.log('error al registrar escoba')
+            console.log('error de validacion')
             return false;
 
         }

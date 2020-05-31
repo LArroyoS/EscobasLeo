@@ -3,7 +3,7 @@
     include("./configuracion/sesion.php");
     if(!$sesion){
 
-        header('Location: /Dulceria/vistas/InicioSesion.php');
+        header('Location: /EscobasLeo/vistas/InicioSesion.php');
 
     }
 
@@ -31,7 +31,7 @@
         
         <!-- Brand -->
         <a class="navbar-brand" 
-        style="font-family: 'Rock Salt', cursive;" href="/Dulceria/vistas/InicioSesion.php">Escobas Leo</a>
+        style="font-family: 'Rock Salt', cursive;" href="/EscobasLeo/vistas/InicioSesion.php">Escobas Leo</a>
 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             

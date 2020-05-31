@@ -62,7 +62,7 @@
                 else{
 
                     //error
-                    $error = 'El SKU ya existe';
+                    $error = 'Ocurrio un error inesperado, no se pudo modificar la escoba';
 
                 }
 
@@ -148,7 +148,7 @@
 
                 <div class="form-group col-md-6">
 
-                    <label for="material">Material ( separalos por un / ):</label>
+                    <label for="material">Material ( separalos por una coma ):</label>
                     <input type="text" class="form-control desactivado" id="material" name="material" value="<?php echo htmlspecialchars($escoba['material']); ?>" disabled="true"/>
                     <div class="text-danger" id="errorMaterial"> </div>
 
@@ -168,7 +168,7 @@
 
                 <div class="form-group col-md-6">
                 
-                    <label for="largo">Largo:</label>
+                    <label for="largo">Largo (cm):</label>
                     <input type="number" step="0.01" class="form-control desactivado" id="largo" name="largo" value="<?php echo htmlspecialchars($escoba['largo']); ?>" disabled="true"/>
                     <div class="text-danger" id="errorLargo"> </div>
 
@@ -180,7 +180,7 @@
                             
                 <div class="form-group col-md-3">
 
-                    <label for="ancho">Ancho:</label>
+                    <label for="ancho">Ancho (cm):</label>
                     <input type="number" step="0.01" class="form-control desactivado" id="ancho" name="ancho" value="<?php echo htmlspecialchars($escoba['ancho']); ?>" disabled="true"/>
                     <div class="text-danger" id="errorAncho"> </div>
 
@@ -188,7 +188,7 @@
 
                 <div class="form-group col-md-3">
                             
-                    <label for="profundidad">Profundidad:</label>
+                    <label for="profundidad">Profundidad (cm):</label>
                     <input type="number" step="0.01" class="form-control desactivado" id="profundidad" name="profundidad" value="<?php echo htmlspecialchars($escoba['profundidad']); ?>" disabled="true"/>
                     <div class="text-danger" id="errorProfundidad"> </div>
 
@@ -196,7 +196,7 @@
 
                 <div class="form-group col-md-3">
                             
-                    <label for="peso">Peso:</label>
+                    <label for="peso">Peso (kg):</label>
                     <input type="number" step="0.01" class="form-control desactivado" id="peso" name="peso" value="<?php echo htmlspecialchars($escoba['peso']); ?>" disabled="true"/>
                     <div class="text-danger" id="errorPeso"> </div>
 
@@ -204,7 +204,7 @@
 
                 <div class="form-group col-md-3">
                             
-                    <label for="precio">Precio:</label>
+                    <label for="precio">Precio (MXN):</label>
                     <input type="number" step="0.01" class="form-control desactivado" id="precio" name="precio" value="<?php echo htmlspecialchars($escoba['precio']); ?>" disabled="true"/>
                     <div class="text-danger" id="errorPrecio"> </div>
 
@@ -223,7 +223,7 @@
             <?php 
             
                 $Botones = $Botones.'<input type="submit" name="eliminar" value="ELIMINAR" class="btn btn btn-danger" style="min-width: 200px;">'
-                            .'<a type="submit" id="modificar" name="modificar" class="btn btn-success text-light" style="min-width: 200px;">MODIFICAR</a>';
+                            .'<a id="modificar" name="modificar" class="btn btn-success text-light" style="min-width: 200px;">MODIFICAR</a>';
 
             ?>
 
