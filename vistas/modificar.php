@@ -3,7 +3,7 @@
     include('./configuracion/conexion.php');
 
     $sku = $marca = $color = $material = $descripcion = $tipo = '';
-    $largo = $ancho = $profundidad = $peso = $precio = $error = '';
+    $largo = $ancho = $profundidad = $peso = $precio = $error = $ruta = '';
 
     $desactivado = 'disabled';
     $lectura = '';
@@ -30,9 +30,7 @@
                 $lectura = 'readonly';
                 $desactivado = '';
 
-                $ruta = mysqli_real_escape_string($conn,$_POST['precio']);
-
-                if(isset($_FILES['imagen'])){
+                if(isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK ){
 
                     $nombreArchivo = $_FILES['imagen']['name'];
                     $nombreArchivoCmps = explode('.',$nombreArchivo); 
@@ -65,7 +63,20 @@
 
             }
 
-        }       
+        }
+
+        //marcas
+        $sql = "SELECT * FROM marcas";
+        $resultado = mysqli_query($conn,$sql);
+        $marcas = mysqli_fetch_all($resultado,MYSQLI_ASSOC);
+
+        mysqli_free_result($resultado);
+
+        $sql = "SELECT * FROM tipo";
+        $resultado = mysqli_query($conn,$sql);
+        $tipos = mysqli_fetch_all($resultado,MYSQLI_ASSOC);
+
+        mysqli_free_result($resultado);     
 
     }
     else{
@@ -91,10 +102,24 @@
     
     <h1 class="text-center text-secondary pb-5">Modificar Escoba</h1>
     
-    <form id="formulario" class="card shadow p-4 mt-5" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
+    <form id="formulario" class="card shadow p-4 mt-5" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST" enctype="multipart/form-data">
 
-        <img id="imagen-vista" class="escoba-formulario imagen" src="../recursos/img/insertar.png" alt="Escoba" />
-        <input type="file" name="imagen" id="imagen" style="display:none;" accept="image/*" <?php echo htmlspecialchars($desactivado); ?> />
+        <img id="imagen-vista" class="escoba-formulario imagen" 
+        src="<?php 
+            if($ruta!=''){
+
+                echo htmlspecialchars($ruta);
+
+            }
+            else{
+
+                echo '../recursos/img/insertar.png';
+
+            }
+
+        ?>" 
+        alt="Escoba" />
+        <input class="desactivado" type="file" name="imagen" id="imagen" style="display:none;" accept="image/*" <?php echo htmlspecialchars($desactivado); ?> />
         <div class="text-danger text-center" id="errorImagen"></div>
 
         <div class="card-body">
@@ -106,7 +131,7 @@
                 <div class="form-group col-md-6">
                         
                     <label for="sku">SKU:</label>
-                    <input type="number" class="form-control" id="sku" name="sku" value="" <?php echo htmlspecialchars($lectura); ?>/>
+                    <input type="number" class="form-control" id="sku" name="sku" value="<?php echo htmlspecialchars($sku); ?>" <?php echo htmlspecialchars($lectura); ?>/>
                     <div class="text-danger" id="errorSku"></div>
 
                 </div>
@@ -123,7 +148,21 @@
             <div class="form-group">
                         
                     <label for="marca">Marca:</label>
-                    <input type="number" class="form-control desactivado" id="marca" name="marca" value="" <?php echo htmlspecialchars($desactivado); ?> />
+                    <select class="form-control desactivado" id="marca" name="marca" <?php echo htmlspecialchars($desactivado); ?>>
+
+                        <option value="">Seleccione una marca</option>
+                        <?php foreach($marcas as $m):?>
+
+                            <option value="<?php echo htmlspecialchars($m['id']); ?>" 
+                            <?php echo htmlspecialchars(($m['id']==$marca)? 'selected':''); ?>>
+
+                                <?php echo htmlspecialchars($m['marca']); ?>
+                                
+                            </option>
+                        
+                        <?php endforeach; ?>
+
+                    </select>
                     <div class="text-danger" id="errorMarca"></div>    
 
             </div>
@@ -133,7 +172,21 @@
                 <div class="form-group col-md-6">
 
                     <label for="tipo">Tipo:</label></label>
-                    <input type="number" class="form-control desactivado" id="tipo" name="tipo" value="" <?php echo htmlspecialchars($desactivado); ?>/>
+                    <select class="form-control desactivado" id="tipo" name="tipo" <?php echo htmlspecialchars($desactivado); ?> >
+
+                        <option value="">Seleccione un tipo</option>
+                        <?php foreach($tipos as $t):?>
+
+                            <option value="<?php echo htmlspecialchars($t['id']); ?>" 
+                            <?php echo htmlspecialchars(($t['id']==$tipo)? 'selected':''); ?>>
+
+                                <?php echo htmlspecialchars($t['tipo']); ?>
+                                
+                            </option>
+
+                        <?php endforeach; ?>
+
+                    </select>
                     <div class="text-danger" id="errorTipo"> </div>
 
                 </div>
@@ -141,7 +194,7 @@
                 <div class="form-group col-md-6">
 
                     <label for="material">Material ( separalos por una coma ):</label>
-                    <input type="text" class="form-control desactivado" id="material" name="material" value="" <?php echo htmlspecialchars($desactivado); ?>/>
+                    <input type="text" class="form-control desactivado" id="material" name="material" value="<?php echo htmlspecialchars($material); ?>" <?php echo htmlspecialchars($desactivado); ?>/>
                     <div class="text-danger" id="errorMaterial"> </div>
 
                 </div>
@@ -153,7 +206,7 @@
                 <div class="form-group col-md-6">
                     
                     <label for="color">Color:</label>
-                    <input type="text" class="form-control desactivado" id="color" name="color" value="" <?php echo htmlspecialchars($desactivado); ?>/>
+                    <input type="text" class="form-control desactivado" id="color" name="color" value="<?php echo htmlspecialchars($color); ?>" <?php echo htmlspecialchars($desactivado); ?>/>
                     <div class="text-danger" id="errorColor"> </div>
 
                 </div>
@@ -161,7 +214,7 @@
                 <div class="form-group col-md-6">
                     
                     <label for="largo">Largo (cm):</label>
-                    <input type="number" step="0.01" class="form-control desactivado" id="largo" name="largo" value="" <?php echo htmlspecialchars($desactivado); ?>/>
+                    <input type="number" step="0.01" class="form-control desactivado" id="largo" name="largo" value="<?php echo htmlspecialchars($largo); ?>" <?php echo htmlspecialchars($desactivado); ?>/>
                     <div class="text-danger" id="errorLargo"> </div>
 
                 </div>
@@ -173,7 +226,7 @@
                 <div class="form-group col-md-3">
 
                     <label for="ancho">Ancho (cm):</label>
-                    <input type="number" step="0.01" class="form-control desactivado" id="ancho" name="ancho" value="" <?php echo htmlspecialchars($desactivado); ?>/>
+                    <input type="number" step="0.01" class="form-control desactivado" id="ancho" name="ancho" value="<?php echo htmlspecialchars($ancho); ?>" <?php echo htmlspecialchars($desactivado); ?>/>
                     <div class="text-danger" id="errorAncho"> </div>
 
                 </div>
@@ -181,7 +234,7 @@
                 <div class="form-group col-md-3">
                             
                     <label for="profundidad">Profundidad (cm):</label>
-                    <input type="number" step="0.01" class="form-control desactivado" id="profundidad" name="profundidad" value="" <?php echo htmlspecialchars($desactivado); ?>/>
+                    <input type="number" step="0.01" class="form-control desactivado" id="profundidad" name="profundidad" value="<?php echo htmlspecialchars($profundidad); ?>" <?php echo htmlspecialchars($desactivado); ?>/>
                     <div class="text-danger" id="errorProfundidad"> </div>
 
                 </div>
@@ -189,7 +242,7 @@
                 <div class="form-group col-md-3">
                             
                     <label for="peso">Peso (kg):</label>
-                    <input type="number" step="0.01" class="form-control desactivado" id="peso" name="peso" value="" <?php echo htmlspecialchars($desactivado); ?>/>
+                    <input type="number" step="0.01" class="form-control desactivado" id="peso" name="peso" value="<?php echo htmlspecialchars($peso); ?>" <?php echo htmlspecialchars($desactivado); ?>/>
                     <div class="text-danger" id="errorPeso"> </div>
 
                 </div>
@@ -197,7 +250,7 @@
                 <div class="form-group col-md-3">
                             
                     <label for="precio">Precio (MXN):</label>
-                    <input type="number" step="0.01" class="form-control desactivado" id="precio" name="precio" value="" <?php echo htmlspecialchars($desactivado); ?>/>
+                    <input type="number" step="0.01" class="form-control desactivado" id="precio" name="precio" value="<?php echo htmlspecialchars($precio); ?>" <?php echo htmlspecialchars($desactivado); ?>/>
                     <div class="text-danger" id="errorPrecio"> </div>
 
                 </div>
@@ -207,7 +260,7 @@
             <div class="form-group">
                             
                 <label for="descripcion">Descripcion:</label>
-                <textarea type="text" class="form-control desactivado" id="descripcion" name="descripcion" cols="40" rows="5" <?php echo htmlspecialchars($desactivado); ?>></textarea>
+                <textarea type="text" class="form-control desactivado" id="descripcion" name="descripcion" cols="40" rows="5" <?php echo htmlspecialchars($desactivado); ?>><?php echo htmlspecialchars($descripcion); ?></textarea>
                 <div class="text-danger" id="errorDescripcion"> </div>
 
             </div>

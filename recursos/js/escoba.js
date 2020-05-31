@@ -12,6 +12,7 @@ $(document).ready(function() {
     var peso = [$("#peso"),$("#errorPeso")];
     var precio = [$("#precio"),$("#errorPrecio")];
     var errorImagen = $("#errorImagen");
+    var ruta =  $('#imagen-vista').attr('src');
 
     $('input[type="file"]').on('change', function(e){
 
@@ -91,19 +92,19 @@ $(document).ready(function() {
                         var json = JSON.parse(resultado);
                         if(isNaN(json)){
 
-                            asignarValor(marca,json);
-                            asignarValor(color,json);
-                            asignarValor(material,json);
-                            asignarValor(descripcion,json);
-                            asignarValor(tipo,json);
-                            asignarValor(largo,json);
-                            asignarValor(ancho,json);
-                            asignarValor(profundidad,json);
-                            asignarValor(peso,json);
-                            asignarValor(precio,json);
+                            asignarValorSelect(marca,json);
+                            asignarValorInputText(color,json);
+                            asignarValorInputText(material,json);
+                            asignarValorInputText(descripcion,json);
+                            asignarValorSelect(tipo,json);
+                            asignarValorInputText(largo,json);
+                            asignarValorInputText(ancho,json);
+                            asignarValorInputText(profundidad,json);
+                            asignarValorInputText(peso,json);
+                            asignarValorInputText(precio,json);
 
                             var imagen = json['imagen'];
-                            if(imagen!=''){
+                            if(imagen!=null && imagen!=''){
 
                                 $('#imagen-vista').attr('src',imagen);
 
@@ -143,7 +144,7 @@ $(document).ready(function() {
 
     });
 
-    function asignarValor(input,resultado){
+    function asignarValorInputText(input,resultado){
 
         let tipo = input[0].attr('id');
 
@@ -151,21 +152,31 @@ $(document).ready(function() {
 
     }
 
+    function asignarValorSelect(input,resultado){
+
+        let tipo = input[0].attr('id');
+
+        input[0].children('option').attr("selected", false);
+        var opcion = input[0].children('option[value="'+resultado[tipo]+'"]');
+        $(opcion).attr("selected", true);
+
+    }
+
     function limpiar(){
 
-        marca[0].val('');
-        color[0].val('')
-        material[0].val('')
-        descripcion[0].val('')
-        tipo[0].val('')
-        largo[0].val('')
-        ancho[0].val('')
-        profundidad[0].val('')
-        peso[0].val('')
-        precio[0].val('')
+        marca[0].children('option').attr("selected", false);
+        color[0].val('');
+        material[0].val('');
+        descripcion[0].val('');
+        tipo[0].children('option').attr("selected", false);
+        largo[0].val('');
+        ancho[0].val('');
+        profundidad[0].val('');
+        peso[0].val('');
+        precio[0].val('');
         sku[0].val('');
 
-        $('#imagen-vista').attr('src','../recursos/img/insertar.png');
+        $('#imagen-vista').attr('src',ruta);
         sku[0].prop('readonly',false);
         $(".desactivado").prop('disabled',true);
         $(".btn-desactivado").prop('disabled',true);
@@ -198,7 +209,7 @@ $(document).ready(function() {
 
         input[0].removeClass('error');
         input[1].text('');
-        let valor = input[0].val();
+        let valor = input[0].val().trim();
         let tipo = input[0].attr('id');
         error = '';
 

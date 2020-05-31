@@ -24,7 +24,7 @@
                 $peso = mysqli_real_escape_string($conn,$_POST['peso']);
                 $precio = mysqli_real_escape_string($conn,$_POST['precio']);
                 
-                if(isset($_FILES['imagen'])){
+                if(isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK ){
 
                     $nombreArchivo = $_FILES['imagen']['name'];
                     $nombreArchivoCmps = explode('.',$nombreArchivo); 
@@ -59,7 +59,20 @@
 
             }
 
-        }       
+        }
+        
+        //marcas
+        $sql = "SELECT * FROM marcas";
+        $resultado = mysqli_query($conn,$sql);
+        $marcas = mysqli_fetch_all($resultado,MYSQLI_ASSOC);
+
+        mysqli_free_result($resultado);
+
+        $sql = "SELECT * FROM tipo";
+        $resultado = mysqli_query($conn,$sql);
+        $tipos = mysqli_fetch_all($resultado,MYSQLI_ASSOC);
+
+        mysqli_free_result($resultado);
 
     }
     else{
@@ -108,7 +121,16 @@
                 <div class="form-group col-md-6">
                         
                     <label for="marca">Marca:</label>
-                    <input type="number" class="form-control" id="marca" name="marca" value="<?php echo htmlspecialchars($marca); ?>" />
+                    <select class="form-control" id="marca" name="marca">
+
+                        <option value="">Seleccione una marca</option>
+                        <?php foreach($marcas as $marca):?>
+
+                            <option value="<?php echo htmlspecialchars($marca['id']); ?>"><?php echo htmlspecialchars($marca['marca']); ?></option>
+                        
+                        <?php endforeach; ?>
+
+                    </select>
                     <div class="text-danger" id="errorMarca"></div>    
 
                 </div>
@@ -120,7 +142,16 @@
                 <div class="form-group col-md-6">
 
                     <label for="tipo">Tipo:</label></label>
-                    <input type="number" class="form-control" id="tipo" name="tipo" value="<?php echo htmlspecialchars($tipo); ?>" />
+                    <select class="form-control" id="tipo" name="tipo">
+
+                        <option value="">Seleccione un tipo</option>
+                        <?php foreach($tipos as $tipo):?>
+
+                            <option value="<?php echo htmlspecialchars($tipo['id']); ?>"><?php echo htmlspecialchars($tipo['tipo']); ?></option>
+
+                        <?php endforeach; ?>
+
+                    </select>
                     <div class="text-danger" id="errorTipo"> </div>
 
                 </div>

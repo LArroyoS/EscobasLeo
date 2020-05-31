@@ -43,9 +43,9 @@
                 $profundidad = mysqli_real_escape_string($conn,$_POST['profundidad']);
                 $peso = mysqli_real_escape_string($conn,$_POST['peso']);
                 $precio = mysqli_real_escape_string($conn,$_POST['precio']);
-                $ruta = mysqli_real_escape_string($conn,$_POST['precio']);
+                $ruta = "";
 
-                if(isset($_FILES['imagen'])){
+                if(isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK){
 
                     $nombreArchivo = $_FILES['imagen']['name'];
                     $nombreArchivoCmps = explode('.',$nombreArchivo); 
@@ -67,7 +67,7 @@
 
                     //Exito
                     //echo  'form es valido';
-                    header('Location: index.php');
+                    //header('Location: index.php');
 
                 }
                 else{
@@ -90,6 +90,19 @@
             $resultado = mysqli_query($conn,$sql);
 
             $escoba = mysqli_fetch_assoc($resultado);
+
+            mysqli_free_result($resultado);
+
+            //marcas
+            $sql = "SELECT * FROM marcas";
+            $resultado = mysqli_query($conn,$sql);
+            $marcas = mysqli_fetch_all($resultado,MYSQLI_ASSOC);
+
+            mysqli_free_result($resultado);
+
+            $sql = "SELECT * FROM tipo";
+            $resultado = mysqli_query($conn,$sql);
+            $tipos = mysqli_fetch_all($resultado,MYSQLI_ASSOC);
 
             mysqli_free_result($resultado);
 
@@ -121,7 +134,7 @@
     
     <h1 class="text-center text-secondary pb-5 ">Detalle de Escoba</h1>
     
-    <form class="card shadow p-4 mt-5" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
+    <form class="card shadow p-4 mt-5" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST" enctype="multipart/form-data">
 
         <?php if($escoba): ?>
 
@@ -139,7 +152,7 @@
                 }
             ?>"
             alt="<?php echo htmlspecialchars($escoba['marca']); ?>" />
-            <input type="file" name="imagen" id="imagen" style="display:none;" accept="image/*" disabled="true"/>
+            <input class="desactivado" type="file" name="imagen" id="imagen" style="display:none;" accept="image/*" disabled="true"/>
             <div class="text-danger text-center" id="errorImagen"></div>
 
             <div class="card-body">
@@ -159,7 +172,21 @@
                     <div class="form-group col-md-6">
                             
                         <label for="marca">Marca:</label>
-                        <input type="number" class="form-control desactivado" id="marca" name="marca" value="<?php echo htmlspecialchars($escoba['marca']); ?>" disabled="true"/>  
+                        <select class="form-control desactivado" id="marca" name="marca" disabled="true" >
+
+                            <option value="">Seleccione una marca</option>
+                            <?php foreach($marcas as $marca):?>
+
+                                <option value="<?php echo htmlspecialchars($marca['id']); ?>"
+                                <?php echo htmlspecialchars(($marca['id']==$escoba['marca'])? 'selected':''); ?> >
+
+                                    <?php echo htmlspecialchars($marca['marca']); ?>
+                                
+                                </option>
+                            
+                            <?php endforeach; ?>
+
+                        </select>
                         <div class="text-danger" id="errorMarca"></div>  
 
                     </div>
@@ -171,7 +198,21 @@
                     <div class="form-group col-md-6">
 
                         <label for="tipo">Tipo:</label></label>
-                        <input type="number" class="form-control desactivado" id="tipo" name="tipo" value="<?php echo htmlspecialchars($escoba['tipo']); ?>" disabled="true"/>
+                        <select class="form-control desactivado" id="tipo" name="tipo" disabled="true">
+
+                            <option value="">Seleccione un tipo</option>
+                            <?php foreach($tipos as $tipo):?>
+
+                                <option value="<?php echo htmlspecialchars($tipo['id']); ?>"
+                                <?php echo htmlspecialchars(($tipo['id']==$escoba['tipo'])? 'selected':''); ?> >
+
+                                    <?php echo htmlspecialchars($tipo['tipo']); ?>
+                                
+                                </option>
+
+                            <?php endforeach; ?>
+
+                        </select>
                         <div class="text-danger" id="errorTipo"> </div>
 
                     </div>

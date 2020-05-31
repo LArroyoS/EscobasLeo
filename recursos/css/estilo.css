@@ -39,6 +39,7 @@ ul{
 .escoba{
 
     width: 150px;
+    height: 150px;
     margin: 40px auto -75px;
     display: block;
     position: relative;
@@ -50,6 +51,7 @@ ul{
 .escoba-formulario{
 
     width: 185px;
+    height: 185px;
     margin: -36px auto -40px;
     display: block;
     position: relative;
