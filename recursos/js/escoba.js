@@ -11,6 +11,47 @@ $(document).ready(function() {
     var profundidad = [$("#profundidad"),$("#errorProfundidad")];
     var peso = [$("#peso"),$("#errorPeso")];
     var precio = [$("#precio"),$("#errorPrecio")];
+    var errorImagen = $("#errorImagen");
+
+    $('input[type="file"]').on('change', function(e){
+
+        input = this;
+        if(this.files && this.files[0]) {
+
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+
+                if(validarArchivo(input)){
+
+                    $('#imagen-vista').attr('src', e.target.result);
+
+                }
+                else{
+
+                    $('#imagen-vista').attr('src','../recursos/img/insertar.png');
+
+                }
+
+            }
+
+            reader.readAsDataURL(this.files[0]);
+
+        }else{
+
+            $('#imagen-vista').attr('src','../recursos/img/insertar.png');
+
+        }
+
+    });
+
+    $('#imagen-vista').on('click',function(){
+
+        $td1 = this;
+        var input = $("#imagen");
+        input[0].click();
+
+    });
 
     $("#botones").on('click','#modificar',function(){
 
@@ -25,7 +66,7 @@ $(document).ready(function() {
 
     });
 
-    $("#buscarModificar").on('click',function(){
+    $("#buscar").on('click',function(){
 
         if( validar(sku)){
 
@@ -60,73 +101,17 @@ $(document).ready(function() {
                             asignarValor(profundidad,json);
                             asignarValor(peso,json);
                             asignarValor(precio,json);
+
+                            var imagen = json['imagen'];
+                            if(imagen!=''){
+
+                                $('#imagen-vista').attr('src',imagen);
+
+                            }
                             
                             sku[0].prop('readonly',true);
                             $(".btn-desactivado").prop('disabled',false);
                             $(".desactivado").prop('disabled',false); 
-
-                        }
-                        else{
-
-                            sku[1].text("No se encontro el producto");
-                            limpiar();
-
-                        }
-
-
-                    }
-
-                }
-            
-            }); 
-
-        }else{
-
-            console.log('error de validacion');
-            limpiar();
-
-        }
-
-    });
-
-    $("#buscarEliminar").on('click',function(){
-
-        if( validar(sku)){
-
-            var cadena = "sku="+sku[0].val();
-            
-            $.ajax
-            ({
-                
-                url: "./consulta.php", //¿Ese archivo se llama así realmente?
-                method: "POST",
-                data: cadena,
-                success: function(resultado){
-
-                    if(resultado == null || resultado == ''){
-
-                        sku[1].text("No se encontro el producto");
-                        limpiar();
-
-                    }
-                    else{
-
-                        var json = JSON.parse(resultado);
-                        if(isNaN(json)){
-
-                            asignarValor(marca,json);
-                            asignarValor(color,json);
-                            asignarValor(material,json);
-                            asignarValor(descripcion,json);
-                            asignarValor(tipo,json);
-                            asignarValor(largo,json);
-                            asignarValor(ancho,json);
-                            asignarValor(profundidad,json);
-                            asignarValor(peso,json);
-                            asignarValor(precio,json);
-                            
-                            sku[0].prop('readonly',true);
-                            $(".btn-desactivado").prop('disabled',false);
 
                         }
                         else{
@@ -180,6 +165,7 @@ $(document).ready(function() {
         precio[0].val('')
         sku[0].val('');
 
+        $('#imagen-vista').attr('src','../recursos/img/insertar.png');
         sku[0].prop('readonly',false);
         $(".desactivado").prop('disabled',true);
         $(".btn-desactivado").prop('disabled',true);
@@ -269,6 +255,44 @@ $(document).ready(function() {
         input[0].addClass("error");
 
         return false;
+
+    }
+
+    function validarArchivo(valor){
+
+        var error = false;
+        if(valor.files && valor.files[0]) {
+
+            var extensiones_permitidas = [".png", ".bmp", ".jpg", ".jpeg"];
+            var tamano = 100; // EXPRESADO EN MB.
+            var rutayarchivo = valor.value;
+            var ultimo_punto = valor.value.lastIndexOf(".");
+            var extension = rutayarchivo.slice(ultimo_punto, rutayarchivo.length);
+            if(extensiones_permitidas.indexOf(extension) == -1){
+
+                errorImagen.text("Extensión de archivo no valida");
+            
+            }
+            else if((valor.files[0].size / 1048576) > tamano)
+            {
+
+                errorImagen.text("El archivo no puede superar los "+tamano+"MB");
+                
+            }
+            else{
+
+                return true;
+
+            }
+
+        }
+
+        if(error==false){
+
+            $('#imagen').replaceWith($('#imagen').val('').clone(true));
+
+        }
+        return error;
 
     }
 

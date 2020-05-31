@@ -6,7 +6,7 @@
 
     if($conn){
 
-        $sql = "SELECT marca,tipo,material,color,precio,sku FROM escoba ORDER BY created_at";
+        $sql = "SELECT marca,tipo,material,color,precio,sku,imagen FROM escoba ORDER BY created_at";
 
         $resultado = mysqli_query($conn,$sql);
 
@@ -52,7 +52,20 @@
                     
                         <div class="card shadow">
                         
-                            <img class="escoba" src="../recursos/img/icon-escoba.png" />
+                            <img class="escoba imagen" 
+                            src="<?php 
+                                if($escoba['imagen']!=''){
+
+                                    echo htmlspecialchars($escoba['imagen']);
+
+                                }
+                                else{
+
+                                    echo '../recursos/img/icon-escoba.png';
+
+                                }
+                            ?>" 
+                            alt="<?php echo htmlspecialchars($escoba['marca']); ?>" />
 
                             <div class="card-body text-center">
 
@@ -76,7 +89,7 @@
 
                             <div class="card-footer bg-white text-right">
                             
-                                <a class="brand-text escoba-text-color" href="detalles.php?sku=<?php echo $escoba['sku']; ?>">MAS INFORMACIÓN</a>
+                                <a class="brand-text escoba-text-color" href="detalles.php?sku=<?php echo  htmlspecialchars($escoba['sku']); ?>">MAS INFORMACIÓN</a>
 
                             </div>
 

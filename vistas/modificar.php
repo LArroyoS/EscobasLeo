@@ -30,12 +30,24 @@
                 $lectura = 'readonly';
                 $desactivado = '';
 
+                $ruta = mysqli_real_escape_string($conn,$_POST['precio']);
+
+                if(isset($_FILES['imagen'])){
+
+                    $nombreArchivo = $_FILES['imagen']['name'];
+                    $nombreArchivoCmps = explode('.',$nombreArchivo); 
+                    $extension = strtolower(end($nombreArchivoCmps));
+                    $ruta = "../recursos/img/$sku.$extension";
+                    move_uploaded_file($_FILES['imagen']['tmp_name'],$ruta);
+
+                }
+
                 $sql = "UPDATE escoba SET
                         marca = '$marca',color = '$color',
                         material = '$material',descripcion = '$descripcion',
                         tipo = '$tipo',largo = '$largo',ancho = '$ancho',
                         profundidad = '$profundidad',peso = '$peso',
-                        precio = '$precio' WHERE sku = '$sku' ";
+                        precio = '$precio', imagen = '$ruta' WHERE sku = '$sku' ";
 
                 // Guardar en la base de datos y revisar
                 if(mysqli_query($conn, $sql)){
@@ -79,122 +91,134 @@
     
     <h1 class="text-center text-secondary pb-5">Modificar Escoba</h1>
     
-    <form id="formulario" class="card shadow p-4" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
+    <form id="formulario" class="card shadow p-4 mt-5" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
 
-        <div class="text-danger"> <?php echo htmlspecialchars($error); ?></div>
+        <img id="imagen-vista" class="escoba-formulario imagen" src="../recursos/img/insertar.png" alt="Escoba" />
+        <input type="file" name="imagen" id="imagen" style="display:none;" accept="image/*" <?php echo htmlspecialchars($desactivado); ?> />
+        <div class="text-danger text-center" id="errorImagen"></div>
 
-        <div class="form-row">
-                
-            <div class="form-group col-md-6">
+        <div class="card-body">
+
+            <div class="text-danger"> <?php echo htmlspecialchars($error); ?></div>
+
+            <div class="form-row">
                     
-                <label for="sku">SKU:</label>
-                <input type="number" class="form-control" id="sku" name="sku" value="" <?php echo htmlspecialchars($lectura); ?>/>
-                <div class="text-danger" id="errorSku"></div>
+                <div class="form-group col-md-6">
+                        
+                    <label for="sku">SKU:</label>
+                    <input type="number" class="form-control" id="sku" name="sku" value="" <?php echo htmlspecialchars($lectura); ?>/>
+                    <div class="text-danger" id="errorSku"></div>
+
+                </div>
+
+                <div class="form-group col-md-6">
+
+                    <label></label>
+                    <a id="buscar" name="buscar" class="btn btn-secondary btn-block text-light">BUSCAR</a>
+                
+                </div>
+                
+            </div>
+
+            <div class="form-group">
+                        
+                    <label for="marca">Marca:</label>
+                    <input type="number" class="form-control desactivado" id="marca" name="marca" value="" <?php echo htmlspecialchars($desactivado); ?> />
+                    <div class="text-danger" id="errorMarca"></div>    
 
             </div>
 
-            <a id="buscarModificar" name="buscar" class="form-group col-md-6 btn btn-secondary btn-block text-light" style="min-width: 200px;">BUSCAR</a>
+            <div class="form-row">
+                            
+                <div class="form-group col-md-6">
 
-            
-        </div>
+                    <label for="tipo">Tipo:</label></label>
+                    <input type="number" class="form-control desactivado" id="tipo" name="tipo" value="" <?php echo htmlspecialchars($desactivado); ?>/>
+                    <div class="text-danger" id="errorTipo"> </div>
 
-        <div class="form-group">
+                </div>
+
+                <div class="form-group col-md-6">
+
+                    <label for="material">Material ( separalos por una coma ):</label>
+                    <input type="text" class="form-control desactivado" id="material" name="material" value="" <?php echo htmlspecialchars($desactivado); ?>/>
+                    <div class="text-danger" id="errorMaterial"> </div>
+
+                </div>
+
+            </div>
+
+            <div class="form-row">
+                            
+                <div class="form-group col-md-6">
                     
-                <label for="marca">Marca:</label>
-                <input type="number" class="form-control desactivado" id="marca" name="marca" value="" <?php echo htmlspecialchars($desactivado); ?> />
-                <div class="text-danger" id="errorMarca"></div>    
+                    <label for="color">Color:</label>
+                    <input type="text" class="form-control desactivado" id="color" name="color" value="" <?php echo htmlspecialchars($desactivado); ?>/>
+                    <div class="text-danger" id="errorColor"> </div>
 
-        </div>
+                </div>
 
-        <div class="form-row">
-                        
-            <div class="form-group col-md-6">
+                <div class="form-group col-md-6">
+                    
+                    <label for="largo">Largo (cm):</label>
+                    <input type="number" step="0.01" class="form-control desactivado" id="largo" name="largo" value="" <?php echo htmlspecialchars($desactivado); ?>/>
+                    <div class="text-danger" id="errorLargo"> </div>
 
-                <label for="tipo">Tipo:</label></label>
-                <input type="number" class="form-control desactivado" id="tipo" name="tipo" value="" <?php echo htmlspecialchars($desactivado); ?>/>
-                <div class="text-danger" id="errorTipo"> </div>
-
-            </div>
-
-            <div class="form-group col-md-6">
-
-                <label for="material">Material ( separalos por una coma ):</label>
-                <input type="text" class="form-control desactivado" id="material" name="material" value="" <?php echo htmlspecialchars($desactivado); ?>/>
-                <div class="text-danger" id="errorMaterial"> </div>
+                </div>
 
             </div>
 
-        </div>
-
-        <div class="form-row">
-                        
-            <div class="form-group col-md-6">
+            <div class="form-row">
                 
-                <label for="color">Color:</label>
-                <input type="text" class="form-control desactivado" id="color" name="color" value="" <?php echo htmlspecialchars($desactivado); ?>/>
-                <div class="text-danger" id="errorColor"> </div>
+                <div class="form-group col-md-3">
+
+                    <label for="ancho">Ancho (cm):</label>
+                    <input type="number" step="0.01" class="form-control desactivado" id="ancho" name="ancho" value="" <?php echo htmlspecialchars($desactivado); ?>/>
+                    <div class="text-danger" id="errorAncho"> </div>
+
+                </div>
+
+                <div class="form-group col-md-3">
+                            
+                    <label for="profundidad">Profundidad (cm):</label>
+                    <input type="number" step="0.01" class="form-control desactivado" id="profundidad" name="profundidad" value="" <?php echo htmlspecialchars($desactivado); ?>/>
+                    <div class="text-danger" id="errorProfundidad"> </div>
+
+                </div>
+
+                <div class="form-group col-md-3">
+                            
+                    <label for="peso">Peso (kg):</label>
+                    <input type="number" step="0.01" class="form-control desactivado" id="peso" name="peso" value="" <?php echo htmlspecialchars($desactivado); ?>/>
+                    <div class="text-danger" id="errorPeso"> </div>
+
+                </div>
+
+                <div class="form-group col-md-3">
+                            
+                    <label for="precio">Precio (MXN):</label>
+                    <input type="number" step="0.01" class="form-control desactivado" id="precio" name="precio" value="" <?php echo htmlspecialchars($desactivado); ?>/>
+                    <div class="text-danger" id="errorPrecio"> </div>
+
+                </div>
 
             </div>
 
-            <div class="form-group col-md-6">
-                
-                <label for="largo">Largo (cm):</label>
-                <input type="number" step="0.01" class="form-control desactivado" id="largo" name="largo" value="" <?php echo htmlspecialchars($desactivado); ?>/>
-                <div class="text-danger" id="errorLargo"> </div>
+            <div class="form-group">
+                            
+                <label for="descripcion">Descripcion:</label>
+                <textarea type="text" class="form-control desactivado" id="descripcion" name="descripcion" cols="40" rows="5" <?php echo htmlspecialchars($desactivado); ?>></textarea>
+                <div class="text-danger" id="errorDescripcion"> </div>
 
             </div>
-
-        </div>
-
-        <div class="form-row">
-            
-            <div class="form-group col-md-3">
-
-                <label for="ancho">Ancho (cm):</label>
-                <input type="number" step="0.01" class="form-control desactivado" id="ancho" name="ancho" value="" <?php echo htmlspecialchars($desactivado); ?>/>
-                <div class="text-danger" id="errorAncho"> </div>
-
-            </div>
-
-            <div class="form-group col-md-3">
-                        
-                <label for="profundidad">Profundidad (cm):</label>
-                <input type="number" step="0.01" class="form-control desactivado" id="profundidad" name="profundidad" value="" <?php echo htmlspecialchars($desactivado); ?>/>
-                <div class="text-danger" id="errorProfundidad"> </div>
-
-            </div>
-
-            <div class="form-group col-md-3">
-                        
-                <label for="peso">Peso (kg):</label>
-                <input type="number" step="0.01" class="form-control desactivado" id="peso" name="peso" value="" <?php echo htmlspecialchars($desactivado); ?>/>
-                <div class="text-danger" id="errorPeso"> </div>
-
-            </div>
-
-            <div class="form-group col-md-3">
-                        
-                <label for="precio">Precio (MXN):</label>
-                <input type="number" step="0.01" class="form-control desactivado" id="precio" name="precio" value="" <?php echo htmlspecialchars($desactivado); ?>/>
-                <div class="text-danger" id="errorPrecio"> </div>
-
-            </div>
-
-        </div>
-
-        <div class="form-group">
-                        
-            <label for="descripcion">Descripcion:</label>
-            <textarea type="text" class="form-control desactivado" id="descripcion" name="descripcion" cols="40" rows="5" <?php echo htmlspecialchars($desactivado); ?>></textarea>
-            <div class="text-danger" id="errorDescripcion"> </div>
 
         </div>
 
         <div class="card-footer bg-white p-3 text-right text-center">
 
-            <a href="index.php" class="btn btn-light" style="min-width: 200px;">REGRESAR</a>
-            <a id='limpiar' class="btn btn-light" style="min-width: 200px;">LIMPIAR</a>
-            <input type="submit" class="btn btn-success btn-desactivado" style="min-width: 200px;" value="GUARDAR" id="enviar" name="enviar" <?php echo htmlspecialchars($desactivado); ?>/>
+            <a href="index.php" class="btn btn-light boton">REGRESAR</a>
+            <a id='limpiar' class="btn btn-light boton">LIMPIAR</a>
+            <input type="submit" class="btn btn-success btn-desactivado boton" value="GUARDAR" id="enviar" name="enviar" <?php echo htmlspecialchars($desactivado); ?>/>
 
         </div>
 

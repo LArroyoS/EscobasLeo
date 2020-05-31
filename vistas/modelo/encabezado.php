@@ -21,7 +21,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Rock+Salt&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous"/>
     <link rel="stylesheet" type="text/css" href="../recursos/css/estilo.css?1.0" />
-    <script src="../recursos/js/escoba.js"></script>    
+    <script src="../recursos/js/escoba.js?2.0"></script>    
 
 </head>
 

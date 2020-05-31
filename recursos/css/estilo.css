@@ -38,12 +38,50 @@ ul{
 
 .escoba{
 
-    width: 100px;
-    margin: 40px auto -30px;
+    width: 150px;
+    margin: 40px auto -75px;
     display: block;
     position: relative;
     top: -70px;
     padding: 0;
 
 }
+
+.escoba-formulario{
+
+    width: 185px;
+    margin: -36px auto -40px;
+    display: block;
+    position: relative;
+    top: -70px;
+    padding: 0;
+
+}
+
+.imagen{
+
+    background-color:#d7d7d7;
+    border: 1px solid black; 
+
+}
+
+.boton{
+
+    min-width: 200px;
+
+}
+
+@media only screen and (max-width: 766px){
+
+    .boton{
+  
+      min-width: auto;
+    
+    }
+  
+}
+
+
+
+
 
