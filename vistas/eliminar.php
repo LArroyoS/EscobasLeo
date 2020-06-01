@@ -104,7 +104,7 @@
             <div class="form-group">
                         
                     <label for="marca">Marca:</label>
-                    <select class="form-control desactivado" id="marca" name="marca" <?php echo htmlspecialchars($desactivado); ?> >
+                    <select class="form-control" id="marca" name="marca" <?php echo htmlspecialchars($desactivado); ?> >
 
                         <option value="">Seleccione una marca</option>
                         <?php foreach($marcas as $marca):?>
@@ -126,7 +126,7 @@
                 <div class="form-group col-md-6">
 
                     <label for="tipo">Tipo:</label></label>
-                    <select class="form-control desactivado" id="tipo" name="tipo" <?php echo htmlspecialchars($desactivado); ?>>
+                    <select class="form-control" id="tipo" name="tipo" <?php echo htmlspecialchars($desactivado); ?>>
 
                         <option value="">Seleccione un tipo</option>
                         <?php foreach($tipos as $tipo):?>
