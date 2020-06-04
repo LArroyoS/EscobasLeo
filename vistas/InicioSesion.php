@@ -24,25 +24,39 @@
             $sql = '';
             $email = mysqli_real_escape_string($conn,$_POST['email']);
             $clave = mysqli_real_escape_string($conn,$_POST['clave']);
+            $resultado = false;
 
             if(isset($_POST['ingresar'])){
 
-               $sql = "SELECT email,clave FROM usuarios WHERE email='$email' and clave='$clave'";
-               $error = 'El usuario o la contraseña son incorrecos';
+               $sql = "SELECT clave FROM usuarios WHERE email='$email' ";
+               $error = 'El usuario es incorrectos';
+               $resultado = mysqli_query($conn,$sql);
+               
+               $usuario = mysqli_fetch_assoc($resultado);
+               if(password_verify($clave,$usuario['clave'])){
+
+                  $resultado = true;
+
+               }
+               else{
+
+                  $resultado = false;
+
+               }
 
             }
-            else{
-      
-               $sql = "INSERT INTO usuarios(email,clave) values ('$email','$clave')";
+            else if(isset($_POST['registrar'])){
+
+               $hash = password_hash($clave,PASSWORD_DEFAULT,['cost' => 10]);
+               $sql = "INSERT INTO usuarios(email,clave) values ('$email','$hash')";
                $error = 'El usuario ya existe';
+               $resultado = mysqli_query($conn,$sql);
 
             }
-
-            $resultado = mysqli_query($conn,$sql);
 
             if($resultado){
 
-               $error = "";
+               $error = '';
                session_start();
                $_SESSION["sesion"] = $email;
                header('Location: index.php');
